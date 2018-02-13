@@ -1,4 +1,4 @@
-﻿@model Vidly.ViewModels.CustomersViewModel
+﻿@model IEnumerable<Vidly.Models.Customer>
 
 @{
     ViewBag.Title = "Customers";
@@ -6,30 +6,26 @@
 }
 
 <h2>Customers</h2>
-@if (Model.Items.Count == 0)
+@if (!Model.Any())
 {
     <text>We have no customers yet.</text>
 }
 else
 {
-    <table class="table">
+    <table class="table table-bordered table-hover">
         <tr>
-            <th>
-                @nameof(Vidly.Models.Customer.Name)
-            </th>
-            <th></th>
+            <th>Name</th>
+            <th>Discount Rate</th>
         </tr>
 
-        @foreach (var item in Model.Items)
+        @foreach (var customer in Model)
         {
             <tr>
                 <td>
-                    @Html.ActionLink(item.Name, nameof(Vidly.Controllers.CustomersController.Details), new { id = item.Id })
+                    @Html.ActionLink(customer.Name, nameof(Vidly.Controllers.CustomersController.Details), new { id = customer.Id })
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    @customer.MembershipType.DiscountRate%
                 </td>
             </tr>
         }

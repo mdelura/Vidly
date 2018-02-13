@@ -21,12 +21,7 @@ namespace Vidly.Controllers
         // GET: Movies
         public ActionResult Index()
         {
-            var moviesViewModel = new MoviesViewModel()
-            {
-                Items = _movies
-            };
-
-            return View(moviesViewModel);
+            return View(_movies);
         }
 
         public ActionResult Details()
