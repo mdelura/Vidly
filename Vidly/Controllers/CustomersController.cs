@@ -24,13 +24,7 @@ namespace Vidly.Controllers
         }
 
         // GET: Customers
-        public ActionResult Index()
-        {
-            var customers = _context.Customers.Include(c => c.MembershipType);
-
-
-            return View(customers);
-        }
+        public ActionResult Index() => View(_context.Customers.Include(c => c.MembershipType));
 
         public ActionResult Details(int id)
         {
@@ -42,6 +36,47 @@ namespace Vidly.Controllers
                 return View(customer);
 
             return HttpNotFound();
+        }
+
+        public ActionResult New() => View(ViewNames.CustomerForm, new CustomerFormViewModel() { MembershipTypes = _context.MembershipTypes });
+
+        [HttpPost]
+        public ActionResult Save(Customer customer)
+        {
+            if (customer.Id == 00)
+                _context.Customers.Add(customer);
+            else
+            {
+                var customerInDb = _context.Customers.Single(c => c.Id == customer.Id);
+                customerInDb.Name = customer.Name;
+                customerInDb.BirthDate = customer.BirthDate;
+                customerInDb.MembershipTypeId = customer.MembershipTypeId;
+                customerInDb.IsSubscribedToNewsletter = customer.IsSubscribedToNewsletter;
+            }
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        public ActionResult Edit(int id)
+        {
+            var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
+            if (customer == null)
+                return HttpNotFound();
+
+            var viewModel = new CustomerFormViewModel()
+            {
+                Customer = customer,
+                MembershipTypes = _context.MembershipTypes
+            };
+
+            return View(ViewNames.CustomerForm, viewModel);
+        }
+
+        class ViewNames
+        {
+            public const string CustomerForm = "CustomerForm";
+
         }
     }
 }
