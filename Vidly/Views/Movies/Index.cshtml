@@ -5,7 +5,9 @@
 }
 
 <h2>Movies</h2>
-
+<button type="button" class="btn btn-primary">@Html.ActionLink("New Movie", nameof(Vidly.Controllers.MoviesController.New), "Movies", new { @class = "btn btn-primary" })</button>
+<br />
+<br />
 <table class="table table-bordered table-hover">
     <tr>
         <th>Movie</th>
@@ -16,7 +18,7 @@
     {
         <tr>
             <td>
-                @Html.ActionLink(movie.Name, nameof(Vidly.Controllers.MoviesController.Details), new { id = movie.Id })
+                @Html.ActionLink(movie.Name, nameof(Vidly.Controllers.MoviesController.Edit), new { id = movie.Id })
             </td>
             <td>
                 @movie.Genre.Name
