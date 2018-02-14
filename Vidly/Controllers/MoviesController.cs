@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -10,49 +11,25 @@ namespace Vidly.Controllers
 {
     public class MoviesController : Controller
     {
-        private List<Movie> _movies = new List<Movie>()
-        {
-            new Movie { Id = 0, Name = "Shrek" },
-            new Movie { Id = 1, Name = "Wall-E" },
-            new Movie { Id = 2, Name = "Inception" },
-        };
-
+        ApplicationDbContext _context = new ApplicationDbContext();
 
         // GET: Movies
         public ActionResult Index()
         {
-            return View(_movies);
+            return View(_context.Movies.Include(m => m.Genre));
         }
 
-        public ActionResult Details()
+        public ActionResult Details(int id)
         {
-            throw new NotImplementedException();
+            var movie = _context.Movies
+                .Include(m => m.Genre)
+                .SingleOrDefault(m => m.Id == id);
+
+            if (movie != null)
+                return View(movie);
+
+            return HttpNotFound();
         }
-
-
-        public ActionResult Random()
-        {
-            var movie = new Movie() { Name = "Shrek!", ReleaseYear = 2001 };
-
-            var customers = new List<Customer>()
-            {
-                new Customer{ Name = "Customer 1"},
-                new Customer{ Name = "Customer 2"},
-                new Customer{ Name = "Customer 3"},
-            };
-
-            var viewModel = new RandomMovieViewModel()
-            {
-                Movie = movie,
-                Customers = customers
-            };
-
-            return View(viewModel);
-        }
-
-        public ActionResult Edit(int id) => Content($"Id: {id}");
-
-        //public ActionResult Index(int pageIndex = 1, string sortBy = "Name") => Content($"pageIndex={pageIndex}&sortBy={sortBy}");
 
         [Route(@"movies/released/{year:regex(\d{4})}/{month:range(1, 12)}")]
         public ActionResult ByReleaseYear(int year, int month) => Content($"Year:{year}, month: {month}");

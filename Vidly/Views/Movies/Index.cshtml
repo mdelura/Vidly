@@ -8,17 +8,18 @@
 
 <table class="table table-bordered table-hover">
     <tr>
-        <th>
-            @nameof(Vidly.Models.Movie.Name)
-        </th>
-        <th></th>
+        <th>Movie</th>
+        <th>Genre</th>
     </tr>
 
-    @foreach (var item in Model)
+    @foreach (var movie in Model)
     {
         <tr>
             <td>
-                @item.Name
+                @Html.ActionLink(movie.Name, nameof(Vidly.Controllers.MoviesController.Details), new { id = movie.Id })
+            </td>
+            <td>
+                @movie.Genre.Name
             </td>
         </tr>
     }
