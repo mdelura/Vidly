@@ -38,11 +38,15 @@ namespace Vidly.Controllers
             return HttpNotFound();
         }
 
-        public ActionResult New() => View(ViewNames.CustomerForm, new CustomerFormViewModel() { MembershipTypes = _context.MembershipTypes });
+        public ActionResult New() => View(ViewNames.CustomerForm, new CustomerFormViewModel(new Customer()));
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Save(Customer customer)
         {
+            if (!ModelState.IsValid)
+                return View(ViewNames.CustomerForm, new CustomerFormViewModel(customer));
+
             if (customer.Id == 0)
                 _context.Customers.Add(customer);
             else
@@ -54,6 +58,7 @@ namespace Vidly.Controllers
                 customerInDb.IsSubscribedToNewsletter = customer.IsSubscribedToNewsletter;
             }
             _context.SaveChanges();
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -64,19 +69,12 @@ namespace Vidly.Controllers
             if (customer == null)
                 return HttpNotFound();
 
-            var viewModel = new CustomerFormViewModel()
-            {
-                Customer = customer,
-                MembershipTypes = _context.MembershipTypes
-            };
-
-            return View(ViewNames.CustomerForm, viewModel);
+            return View(ViewNames.CustomerForm, new CustomerFormViewModel(customer));
         }
 
         class ViewNames
         {
             public const string CustomerForm = "CustomerForm";
-
         }
     }
 }
