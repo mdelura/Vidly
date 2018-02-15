@@ -28,7 +28,7 @@ namespace Vidly.Controllers
             return HttpNotFound();
         }
 
-        public ActionResult New() => View(ViewNames.MovieForm, new MovieFormViewModel() { Title = "New Movie" });
+        public ActionResult New() => View(ViewNames.MovieForm, new MovieFormViewModel("New Movie", new Movie()));
 
         public ActionResult Edit(int id)
         {
@@ -36,16 +36,11 @@ namespace Vidly.Controllers
             if (customer == null)
                 return HttpNotFound();
 
-            var viewModel = new MovieFormViewModel()
-            {
-                Title = "Edit Movie",
-                Movie = customer,
-            };
-
-            return View(ViewNames.MovieForm, viewModel);
+            return View(ViewNames.MovieForm, new MovieFormViewModel("Edit Movie", customer));
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Save(Movie movie)
         {
             if (movie.Id == 0)
