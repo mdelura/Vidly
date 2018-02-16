@@ -5,6 +5,10 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using System.Web.Http;
+using AutoMapper;
+using Vidly.Dtos;
+using Vidly.Models;
 
 namespace Vidly
 {
@@ -12,10 +16,25 @@ namespace Vidly
     {
         protected void Application_Start()
         {
+            InitializeMapper();
+            GlobalConfiguration.Configure(WebApiConfig.Register);
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+        }
+
+        private void InitializeMapper()
+        {
+            Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<Customer, CustomerDto>()
+                    .ForMember(c => c.Id, opt => opt.Ignore());
+                cfg.CreateMap<CustomerDto, Customer>();
+                cfg.CreateMap<Movie, MovieDto>()
+                    .ForMember(c => c.Id, opt => opt.Ignore());
+                cfg.CreateMap<MovieDto, Movie>();
+            });
         }
     }
 }
