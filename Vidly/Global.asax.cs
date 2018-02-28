@@ -28,12 +28,15 @@ namespace Vidly
         {
             Mapper.Initialize(cfg =>
             {
-                cfg.CreateMap<Customer, CustomerDto>()
+                //Domain to Dto
+                cfg.CreateMap<Customer, CustomerDto>();
+                cfg.CreateMap<Movie, MovieDto>();
+                cfg.CreateMap<MembershipType, MembershipTypeDto>();
+                //Dto to Domain
+                cfg.CreateMap<CustomerDto, Customer>()
                     .ForMember(c => c.Id, opt => opt.Ignore());
-                cfg.CreateMap<CustomerDto, Customer>();
-                cfg.CreateMap<Movie, MovieDto>()
+                cfg.CreateMap<MovieDto, Movie>()
                     .ForMember(c => c.Id, opt => opt.Ignore());
-                cfg.CreateMap<MovieDto, Movie>();
             });
         }
     }

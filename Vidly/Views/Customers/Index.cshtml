@@ -1,34 +1,66 @@
-﻿@model IEnumerable<Vidly.Models.Customer>
-
+﻿@using Vidly.Controllers
 @{
     ViewBag.Title = "Customers";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Customers</h2>
-@if (!Model.Any())
-{
-    <text>We have no customers yet.</text>
-}
-else
-{
-    <table class="table table-bordered table-hover">
+<button type="button" class="btn btn-primary">@Html.ActionLink("New Customer", nameof(CustomersController.New), "Customers", new { @class = "btn btn-primary" })</button>
+<br />
+<br />
+<table id="customers" class="table table-bordered table-hover">
+    <thead>
         <tr>
             <th>Name</th>
             <th>Membership Type</th>
+            <th>Delete</th>
         </tr>
+    </thead>
+    <tbody></tbody>
+</table>
 
-        @foreach (var customer in Model)
-        {
-            <tr>
-                <td>
-                    @Html.ActionLink(customer.Name, nameof(Vidly.Controllers.CustomersController.Edit), new { id = customer.Id })
-                </td>
-                <td>
-                    @customer.MembershipType.Name
-                </td>
-            </tr>
-        }
-    </table>
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            var table = $("#customers").DataTable({
+                ajax: {
+                    url: "/api/customers",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "name",
+                        render: function (data, type, customer) {
+                            return "<a href='customers/edit/" + customer.id + "'>" + customer.name + "</a>";
+                        }
+                    },
+                    {
+                        data: "membershipType.name"
+                    },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return "<button class='btn-link js-delete' data-customer-id=" + data + ">Delete</button>";
+                        }
+                    }
+                ]
+            });
+
+            $("#customers").on("click", ".js-delete", function () {
+                var button = $(this);
+                bootbox.confirm("Are you sure you want to delete this customer?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/customers/" + button.attr("data-customer-id"),
+                            method: "DELETE",
+                            success: function () {
+                                table.row(button.parents("tr")).remove().draw();
+                            }
+                        });
+                    }
+                });
+            })
+        });
+    </script>
 }
 
