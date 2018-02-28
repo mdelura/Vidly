@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Vidly.Models;
 using Vidly.ViewModels;
@@ -14,7 +12,7 @@ namespace Vidly.Controllers
         ApplicationDbContext _context = new ApplicationDbContext();
 
         // GET: Movies
-        public ActionResult Index() => View();
+        public ActionResult Index() => View(User.IsInRole(RoleName.CanManageMovies) ? ViewNames.List : ViewNames.ReadOnlyList);
 
         public ActionResult Details(int id)
         {
@@ -28,6 +26,7 @@ namespace Vidly.Controllers
             return HttpNotFound();
         }
 
+        [Authorize(Roles = RoleName.CanManageMovies)]
         public ActionResult New() => View(ViewNames.MovieForm, new MovieFormViewModel("New Movie", new Movie()));
 
         public ActionResult Edit(int id)
@@ -63,9 +62,11 @@ namespace Vidly.Controllers
         [Route(@"movies/released/{year:regex(\d{4})}/{month:range(1, 12)}")]
         public ActionResult ByReleaseYear(int year, int month) => Content($"Year:{year}, month: {month}");
 
-        class ViewNames
+        static class ViewNames
         {
             public const string MovieForm = "MovieForm";
+            public const string List = "List";
+            public const string ReadOnlyList = "ReadOnlyList";
 
         }
     }
