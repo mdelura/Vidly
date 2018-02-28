@@ -32,6 +32,7 @@ namespace Vidly
                 cfg.CreateMap<Customer, CustomerDto>();
                 cfg.CreateMap<Movie, MovieDto>();
                 cfg.CreateMap<MembershipType, MembershipTypeDto>();
+                cfg.CreateMap<Genre, GenreDto>();
                 //Dto to Domain
                 cfg.CreateMap<CustomerDto, Customer>()
                     .ForMember(c => c.Id, opt => opt.Ignore());

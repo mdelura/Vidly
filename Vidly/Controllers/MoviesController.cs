@@ -14,7 +14,7 @@ namespace Vidly.Controllers
         ApplicationDbContext _context = new ApplicationDbContext();
 
         // GET: Movies
-        public ActionResult Index() => View(_context.Movies.Include(m => m.Genre));
+        public ActionResult Index() => View();
 
         public ActionResult Details(int id)
         {
