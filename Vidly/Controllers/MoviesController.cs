@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
 using Vidly.Models;
+using Vidly.Models.Account;
 using Vidly.ViewModels;
 
 namespace Vidly.Controllers
@@ -29,6 +30,7 @@ namespace Vidly.Controllers
         [Authorize(Roles = RoleName.CanManageMovies)]
         public ActionResult New() => View(ViewNames.MovieForm, new MovieFormViewModel("New Movie", new Movie()));
 
+        [Authorize(Roles = RoleName.CanManageMovies)]
         public ActionResult Edit(int id)
         {
             var customer = _context.Movies.SingleOrDefault(c => c.Id == id);
@@ -40,6 +42,7 @@ namespace Vidly.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = RoleName.CanManageMovies)]
         public ActionResult Save(Movie movie)
         {
             if (movie.Id == 0)

@@ -1,8 +1,7 @@
 namespace Vidly.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
-    using Vidly.Models;
+    using Vidly.Models.Account;
 
     public partial class SeedUsers : DbMigration
     {

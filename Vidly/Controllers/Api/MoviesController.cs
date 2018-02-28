@@ -7,9 +7,11 @@ using System.Web.Http;
 using AutoMapper;
 using Vidly.Dtos;
 using Vidly.Models;
+using Vidly.Models.Account;
 
 namespace Vidly.Controllers.Api
 {
+    [Authorize(Roles = RoleName.CanManageMovies)]
     public class MoviesController : ApiController
     {
         private readonly ApplicationDbContext _context = new ApplicationDbContext();
