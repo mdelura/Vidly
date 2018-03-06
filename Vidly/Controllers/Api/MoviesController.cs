@@ -15,8 +15,6 @@ namespace Vidly.Controllers.Api
     public class MoviesController : ApiController
     {
         private readonly ApplicationDbContext _context = new ApplicationDbContext();
-        //GET /api/movies
-        public IEnumerable<MovieDto> GetMovies() => _context.Movies.Include(m => m.Genre).ToList().Select(Mapper.Map<Movie, MovieDto>);
 
         //GET /api/movies
         public IHttpActionResult GetMovie(int id)
@@ -26,6 +24,23 @@ namespace Vidly.Controllers.Api
                 return NotFound();
 
             return Ok(Mapper.Map<Movie, MovieDto>(movie));
+        }
+
+        public IHttpActionResult GetMovies(string query = null)
+        {
+            var moviesQuery = _context.Movies
+                .Include(m => m.Genre)
+                .Where(m => m.NumberAvailable > 0);
+
+            if (!string.IsNullOrWhiteSpace(query))
+                moviesQuery = moviesQuery.Where(c => c.Name.Contains(query));
+
+
+            var movieDtos = moviesQuery
+               .ToList()
+               .Select(Mapper.Map<Movie, MovieDto>);
+
+            return Ok(movieDtos);
         }
 
 

@@ -14,7 +14,6 @@ namespace Vidly.Controllers.Api
         // GET api/<controller>
         public IEnumerable<Rental> Get() => _context.Rentals;
 
-
         // GET api/<controller>/5
         public Rental Get(int id) => _context.Rentals.SingleOrDefault(r => r.Id == id);
 
@@ -25,10 +24,14 @@ namespace Vidly.Controllers.Api
             var customer = _context.Customers.Single(c => c.Id == newRentalDto.CustomerId);
 
             var rentedMovies = _context.Movies
-                .Where(m => newRentalDto.MovieIds.Contains(m.Id));
+                .Where(m => newRentalDto.MovieIds.Contains(m.Id))
+                .ToList();
 
             foreach (var movie in rentedMovies)
             {
+                if (movie.NumberAvailable == 0)
+                    return BadRequest("Movie is not available.");
+
                 movie.NumberAvailable--;
 
                 var rental = new Rental
@@ -42,18 +45,6 @@ namespace Vidly.Controllers.Api
             _context.SaveChanges();
 
             return Ok();
-        }
-
-        [HttpPut]
-        // PUT api/<controller>/5
-        public void Put(int id, NewRentalDto newRentalDto)
-        {
-            throw new NotImplementedException();
-        }
-
-        // DELETE api/<controller>/5
-        public void Delete(int id)
-        {
         }
     }
 }

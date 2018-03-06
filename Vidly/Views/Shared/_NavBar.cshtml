@@ -7,12 +7,14 @@
                 <span class="icon-bar"></span>
             </button>
             @Html.ActionLink("Vidly", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            @Html.ActionLink("New Rental", "New", "Rentals", new { area = "" }, new { @class = "navbar-brand" })
             @Html.ActionLink("Customers", "Index", "Customers", new { area = "" }, new { @class = "navbar-brand" })
             @Html.ActionLink("Movies", "Index", "Movies", new { area = "" }, new { @class = "navbar-brand" })
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                <li>@Html.ActionLink("New Rental", "New", "Rentals")</li>
                 <li>@Html.ActionLink("Customers", "Index", "Customers")</li>
                 <li>@Html.ActionLink("Movies", "Index", "Movies")</li>
                 @Html.Partial("_LoginPartial")
