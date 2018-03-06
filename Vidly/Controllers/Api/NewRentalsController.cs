@@ -22,9 +22,6 @@ namespace Vidly.Controllers.Api
         [HttpPost]
         public IHttpActionResult CreateNewRentals(NewRentalDto newRentalDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
             var customer = _context.Customers.Single(c => c.Id == newRentalDto.CustomerId);
 
             var rentedMovies = _context.Movies
@@ -32,6 +29,8 @@ namespace Vidly.Controllers.Api
 
             foreach (var movie in rentedMovies)
             {
+                movie.NumberAvailable--;
+
                 var rental = new Rental
                 {
                     Customer = customer,
